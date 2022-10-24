@@ -1,0 +1,8 @@
+version: "3"
+services:
+  nginx-app:
+    build:
+      context: .
+      dockerfile: ./Docker/nginx.Dockerfile
+    ports:
+      - 3700:80

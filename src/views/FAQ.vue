@@ -278,14 +278,16 @@ Go 采用的是三色标记法，将内存里的对象分为了三种：
           :aria-expanded="index === flag"
           @click="toggleAccordion(index)"
         >
-          <span class="accordion-title">{{
-            index + 1 + ".  " + item.question
-          }}</span>
-          <span
-            class="accordion-difficulty"
-            :data-difficulty="item.difficulty"
-            >{{ diffMap.get(item.difficulty) }}</span
-          >
+          <div class="title-wrapper">
+            <span class="accordion-title">{{
+              index + 1 + ".  " + item.question
+            }}</span>
+            <span
+              class="accordion-difficulty"
+              :data-difficulty="item.difficulty"
+              >{{ diffMap.get(item.difficulty) }}</span
+            >
+          </div>
           <span class="icon" aria-hidden="true"></span>
         </button>
         <div class="accordion-content">
@@ -314,7 +316,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Hind", sans-serif;
-  background: #fff;
+  background: #f8f8f8;
   color: #4d5974;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -372,6 +374,10 @@ body {
   border: 1px solid #03b5d2;
 }
 
+.accordion button .title-wrapper {
+  width: 90%;
+}
+
 .accordion button .accordion-title {
   padding: 1em 1.5em 1em 0;
 }
@@ -392,8 +398,9 @@ body {
 .accordion button .icon {
   display: inline-block;
   position: absolute;
-  top: 18px;
+  top: 50%;
   right: 0;
+  transform: translateY(-50%);
   width: 22px;
   height: 22px;
   border: 1px solid;
