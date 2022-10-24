@@ -304,6 +304,8 @@ Go 采用的是三色标记法，将内存里的对象分为了三种：
 * {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 *::before,
@@ -377,6 +379,8 @@ body {
 .accordion button .title-wrapper {
   width: 90%;
 }
+
+
 
 .accordion button .accordion-title {
   padding: 1em 1.5em 1em 0;
