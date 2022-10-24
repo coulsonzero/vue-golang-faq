@@ -56,7 +56,7 @@ export default {
             若没有扩容逻辑的话, 以上所述的 3 层循环即可完成 map 的遍历
             map 的遍历是无序的
         `,
-        difficulty: "easy",
+        difficulty: "hard",
       },
       {
         question: "Maps 是线程安全的吗？怎么解决它的并发安全问题？",
@@ -72,7 +72,7 @@ export default {
                 适合读多写少的场景；
                 缺点也就是：如果是写多的场景，会导致 read map 缓存失效，需要加锁，冲突变多，性能急剧下降。
         `,
-        difficulty: "easy",
+        difficulty: "medium",
       },
       {
         question: "Go 如何实现原子操作？",
@@ -97,11 +97,6 @@ export default {
             对于一个变量更新的保护，原子操作通常会更有效率，并且更能利用计算机多核的优势。
         `,
         difficulty: "hard",
-      },
-      {
-        question: "context 使用场景和用途 ?",
-        answer: `context简化对于处理单个请求的多个Goroutine协程之间与请求域的数据、超时和退出等操作，实现线程安全退出或超时的控制`,
-        difficulty: "medium",
       },
       {
         question: "有缓存的管道和没有缓存的管道区别是什么？",
@@ -142,9 +137,13 @@ export default {
         channel是线程安全的吗:
             如果把线程安全定义为允许多个goroutine同时去读写，那么golang 的channel 是线程安全的。不需要在并发读写同一个channe时加锁
         `,
+        difficulty: "hard",
+      },
+      {
+        question: "context 使用场景和用途 ?",
+        answer: `context简化对于处理单个请求的多个Goroutine协程之间与请求域的数据、超时和退出等操作，实现线程安全退出或超时的控制`,
         difficulty: "medium",
       },
-
       {
         question: "简单介绍 GMP 模型以及该模型的优点 ? (基本必问)",
         answer: `GMP 模型是 golang 自己的一个调度模型，它抽象出了下面三个结构：
@@ -189,42 +188,43 @@ export default {
             会主动把当前 goroutine 的CPU (P) 转让出去，让其他 goroutine 能被调度并执行，也就是 Golang 从语言层面支持了协程。
             Golang 的一大特色就是从语言层面原生支持协程，在函数或者方法前面加 go关键字就可创建一个协程
 
-`,
+        `,
         difficulty: "medium",
       },
       {
         question: "简述 Golang 垃圾回收的机制 ? (基本必问)",
         answer: `Go1.3采用标记清除法， Go1.5采用三色标记法，Go1.8采用三色标记法+混合写屏障。
         标记清除法
-分为两个阶段：标记和清除
-标记阶段：从根对象出发寻找并标记所有存活的对象。
-清除阶段：遍历堆中的对象，回收未标记的对象，并加入空闲链表。
-缺点是需要暂停程序STW。
-三色标记法：
-将对象标记为白色，灰色或黑色。
-白色：不确定对象（默认色）；黑色：存活对象。灰色：存活对象，子对象待处理。
-标记开始时，先将所有对象加入白色集合（需要STW）。首先将根对象标记为灰色，然后将一个对象从灰色集合取出，
-遍历其子对象，放入灰色集合。同时将取出的对象放入黑色集合，直到灰色集合为空。最后的白色集合对象就是需要清理的对象。
-这种方法有一个缺陷，如果对象的引用被用户修改了，那么之前的标记就无效了。因此Go采用了写屏障技术，当对象新增或者更新会将其着色为灰色。
-一次完整的GC分为四个阶段：
-准备标记（需要STW），开启写屏障。
-开始标记
-标记结束（STW），关闭写屏障
-清理（并发）
-基于插入写屏障和删除写屏障在结束时需要STW来重新扫描栈，带来性能瓶颈。混合写屏障分为以下四步：
-GC开始时，将栈上的全部对象标记为黑色（不需要二次扫描，无需STW）；
-GC期间，任何栈上创建的新对象均为黑色
-被删除引用的对象标记为灰色
-被添加引用的对象标记为灰色
-总而言之就是确保黑色对象不能引用白色对象，这个改进直接使得GC时间从 2s降低到2us。
+            分为两个阶段：标记和清除
+            标记阶段：从根对象出发寻找并标记所有存活的对象。
+            清除阶段：遍历堆中的对象，回收未标记的对象，并加入空闲链表。
+            缺点是需要暂停程序STW。
+            三色标记法：
+            将对象标记为白色，灰色或黑色。
+            白色：不确定对象（默认色）；黑色：存活对象。灰色：存活对象，子对象待处理。
+            标记开始时，先将所有对象加入白色集合（需要STW）。首先将根对象标记为灰色，然后将一个对象从灰色集合取出，
+            遍历其子对象，放入灰色集合。同时将取出的对象放入黑色集合，直到灰色集合为空。最后的白色集合对象就是需要清理的对象。
+            这种方法有一个缺陷，如果对象的引用被用户修改了，那么之前的标记就无效了。因此Go采用了写屏障技术，当对象新增或者更新会将其着色为灰色。
+            一次完整的GC分为四个阶段：
+            准备标记（需要STW），开启写屏障。
+            开始标记
+            标记结束（STW），关闭写屏障
+            清理（并发）
+            基于插入写屏障和删除写屏障在结束时需要STW来重新扫描栈，带来性能瓶颈。混合写屏障分为以下四步：
+            GC开始时，将栈上的全部对象标记为黑色（不需要二次扫描，无需STW）；
+            GC期间，任何栈上创建的新对象均为黑色
+            被删除引用的对象标记为灰色
+            被添加引用的对象标记为灰色
+            总而言之就是确保黑色对象不能引用白色对象，这个改进直接使得GC时间从 2s降低到2us。
 
--------------------
-Go 采用的是三色标记法，将内存里的对象分为了三种：
-白色对象：未被使用的对象；
-灰色对象：当前对象有引用对象，但是还没有对引用对象继续扫描过；
-黑色对象，对上面提到的灰色对象的引用对象已经全部扫描过了，下次不用再扫描它了。
-当垃圾回收开始时，Go 会把根对象标记为灰色，其他对象标记为白色，然后从根对象遍历搜索，
-按照上面的定义去不断的对灰色对象进行扫描标记。当没有灰色对象时，表示所有对象已扫描过，然后就可以开始清除白色对象了。`,
+            -------------------
+            Go 采用的是三色标记法，将内存里的对象分为了三种：
+            白色对象：未被使用的对象；
+            灰色对象：当前对象有引用对象，但是还没有对引用对象继续扫描过；
+            黑色对象，对上面提到的灰色对象的引用对象已经全部扫描过了，下次不用再扫描它了。
+            当垃圾回收开始时，Go 会把根对象标记为灰色，其他对象标记为白色，然后从根对象遍历搜索，
+            按照上面的定义去不断的对灰色对象进行扫描标记。当没有灰色对象时，表示所有对象已扫描过，然后就可以开始清除白色对象了。
+        `,
         difficulty: "hard",
       },
       {
@@ -250,7 +250,7 @@ Go 采用的是三色标记法，将内存里的对象分为了三种：
                 4. select操作在所有case上都阻塞()
                 5. goroutine进入死循环，一直结束不了
         `,
-        difficulty: "easy",
+        difficulty: "medium",
       },
     ],
     flag: -1,
@@ -306,8 +306,10 @@ Go 采用的是三色标记法，将内存里的对象分为了三种：
 <style>
 @import url("https://fonts.googleapis.com/css?family=Hind:300,400&display=swap");
 * {
-  -webkit-box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -319,11 +321,10 @@ Go 采用的是三色标记法，将内存里的对象分为了三种：
 }
 
 body {
-  margin: 0;
-  padding: 0;
   font-family: "Hind", sans-serif;
   /* background: #f8f8f8; */
-  background: linear-gradient(to top, #edf4ff 0%, #cbe5ff 100%);
+  /* background: linear-gradient(to top, #edf4ff 0%, #cbe5ff 100%); */
+  background: linear-gradient(240deg, #edf4ff 0%, #a6d0fb 70%, #bbdcfd 100%);
   color: #4d5974;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -344,7 +345,7 @@ body {
 }
 
 .accordion .accordion-item button[aria-expanded="false"] {
-    border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
 }
 
 .accordion .accordion-item button[aria-expanded="true"] {
@@ -462,7 +463,7 @@ body {
   opacity: 0;
   max-height: 0;
   overflow: hidden;
-  transition: all .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
   /* -webkit-transition: opacity 150ms ease-in-out, max-height .3s ease-in-out;
   transition: opacity 150ms ease-in-out, max-height .3s ease-in-out;
   will-change: opacity, max-height; */
@@ -489,7 +490,7 @@ body {
   font-weight: 500;
 }
 
-@media (max-width: 900px) {
+@media screen and (max-width: 480px) {
   html {
     font-size: 70%;
   }
