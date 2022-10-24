@@ -505,5 +505,11 @@ body {
     margin-top: 1rem;
   }
 }
+
+@media screen and (max-width: 900px) {
+  html {
+    font-size: 80%;
+  }
+}
 /*# sourceMappingURL=FAQ.css.map */
 </style>
