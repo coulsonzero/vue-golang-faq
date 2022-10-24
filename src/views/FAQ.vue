@@ -296,6 +296,10 @@ Go 采用的是三色标记法，将内存里的对象分为了三种：
       </div>
     </div>
   </div>
+
+  <div class="copyright">
+    <div>&copy;2022 <span>CoulsonZero</span> All rights reserved</div>
+  </div>
 </template>
 
 
@@ -318,7 +322,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Hind", sans-serif;
-  background: #f8f8f8;
+  /* background: #f8f8f8; */
+  background: linear-gradient(to top, #edf4ff 0%, #cbe5ff 100%);
   color: #4d5974;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -334,10 +339,12 @@ body {
 
 .container h2 {
   text-align: center;
+  font-size: 3rem;
+  margin-bottom: 5rem;
 }
 
-.accordion .accordion-item {
-  border-bottom: 1px solid #e5e5e5;
+.accordion .accordion-item button[aria-expanded="false"] {
+    border-bottom: 1px solid #aaa;
 }
 
 .accordion .accordion-item button[aria-expanded="true"] {
@@ -379,8 +386,6 @@ body {
 .accordion button .title-wrapper {
   width: 90%;
 }
-
-
 
 .accordion button .accordion-title {
   padding: 1em 1.5em 1em 0;
@@ -447,8 +452,9 @@ body {
   opacity: 1;
   /* max-height: 9em; */
   max-height: 100em;
-  -webkit-transition: all 300ms linear;
-  transition: all 300ms linear;
+  /* transition: all 0.7s ease-in-out; */
+  -webkit-transition: opacity 500ms ease-in-out, max-height 500ms ease-in-out;
+  transition: opacity 500ms ease-in-out, max-height 500ms ease-in-out;
   will-change: opacity, max-height;
 }
 
@@ -456,9 +462,10 @@ body {
   opacity: 0;
   max-height: 0;
   overflow: hidden;
-  -webkit-transition: opacity 100ms linear, max-height 200ms linear;
-  transition: opacity 100ms linear, max-height 200ms linear;
-  will-change: opacity, max-height;
+  transition: all .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  /* -webkit-transition: opacity 150ms ease-in-out, max-height .3s ease-in-out;
+  transition: opacity 150ms ease-in-out, max-height .3s ease-in-out;
+  will-change: opacity, max-height; */
 }
 
 .accordion .accordion-content p {
@@ -467,6 +474,19 @@ body {
   margin: 2em 0;
   white-space: pre-line;
   letter-spacing: 1px;
+  color: #303030;
+}
+
+.copyright {
+  font-size: 86%;
+  text-align: center;
+  margin: 40px 0;
+  color: #757678;
+  font-weight: 300;
+}
+.copyright span {
+  color: #303030;
+  font-weight: 500;
 }
 
 @media (max-width: 900px) {
