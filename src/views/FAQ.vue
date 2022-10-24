@@ -506,10 +506,11 @@ body {
   }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1000px) {
   html {
-    font-size: 80%;
+    font-size: 70%;
   }
+
 }
 /*# sourceMappingURL=FAQ.css.map */
 </style>
