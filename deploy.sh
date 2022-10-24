@@ -15,6 +15,7 @@ git init
 git add -A
 git commit -m 'deploy vue-golang-faq'
 
+git push -f git@github.com:coulsonzero/vue-golang-faq.git master
 # 如果发布到https://<USERNAME>.github.io/<REPO>
 git push -f git@github.com:coulsonzero/vue-golang-faq.git master:gh-pages
 
