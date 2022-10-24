@@ -323,8 +323,8 @@ export default {
 body {
   font-family: "Hind", sans-serif;
   /* background: #f8f8f8; */
-  /* background: linear-gradient(to top, #edf4ff 0%, #cbe5ff 100%); */
-  background: linear-gradient(240deg, #edf4ff 0%, #a6d0fb 70%, #bbdcfd 100%);
+  background: linear-gradient(to top, #e3edfd 0%, #cbe5ff 100%);
+  /* background: linear-gradient(240deg, #edf4ff 0%, #a6d0fb 70%, #bbdcfd 100%); */
   color: #4d5974;
   display: -webkit-box;
   display: -ms-flexbox;
