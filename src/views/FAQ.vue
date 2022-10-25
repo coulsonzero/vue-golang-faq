@@ -322,9 +322,16 @@ export default {
 
 body {
   font-family: "Hind", sans-serif;
-  /* background: #f8f8f8; */
-  background: linear-gradient(to top, #e3edfd 0%, #cbe5ff 100%);
+  background: #f8f8f8;
+  /* background-image: linear-gradient(120deg, #e8f0fe 0%, #dceaba 30%, #89f7fe, 70% #d2e9ff 100%); */
   /* background: linear-gradient(240deg, #edf4ff 0%, #a6d0fb 70%, #bbdcfd 100%); */
+  /* background-image: linear-gradient(
+    -225deg,
+    #eddbff 0%,
+    #aed6ff 30%,
+    #d7fffe 70%,
+    #fffeff 100%
+  ); */
   color: #4d5974;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -351,6 +358,9 @@ body {
 .accordion .accordion-item button[aria-expanded="true"] {
   /* border-bottom: 1px solid #03b5d2; */
   border-bottom: 1px solid #303030;
+  background: hsla(0, 0%, 19%, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .accordion button {
@@ -510,7 +520,6 @@ body {
   html {
     font-size: 70%;
   }
-
 }
 /*# sourceMappingURL=FAQ.css.map */
 </style>
