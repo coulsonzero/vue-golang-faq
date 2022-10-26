@@ -192,6 +192,27 @@ export default {
         difficulty: "medium",
       },
       {
+        question: "简述 Golang GC 垃圾回收 ？",
+        answer: `
+          什么是GC ？
+            垃圾回收(GC): 是一种自动管理内存的机制，垃圾回收器会去尝试回收程序不再使用的对象及其占用的内存
+          为什么要 GC ？
+            手动管理内存挺麻烦，管错或者管漏内存也很糟糕，将会直接导致程序不稳定（持续泄露）甚至直接崩溃
+        `,
+        difficulty: "easy",
+      },
+      {
+        question: "GC 触发时机是什么样的 ？",
+        answer: ` GC 触发的时机：
+          1) 系统触发: [具体查看 src/runtime/mgc.go 源码]
+            a) gcTriggerHeap 堆阈值触发:  当所分配的堆大小达到阈值时，将会触发GC
+            b) gcTriggerTime 定期触发  :  默认 每2min 触发一次gc,
+            c) gcTriggerCycle 默认触发 :  如果没有开启 GC，则启动 GC
+          2) 手动触发：调用 runtime.GC() 方法
+        `,
+        difficulty: "easy",
+      },
+      {
         question: "简述 Golang 垃圾回收的机制 ? (基本必问)",
         answer: `Go1.3采用标记清除法， Go1.5采用三色标记法，Go1.8采用三色标记法+混合写屏障。
         标记清除法
@@ -226,15 +247,6 @@ export default {
             按照上面的定义去不断的对灰色对象进行扫描标记。当没有灰色对象时，表示所有对象已扫描过，然后就可以开始清除白色对象了。
         `,
         difficulty: "hard",
-      },
-      {
-        question: "GC 触发机制是什么样的 ？",
-        answer: ` GC的触发:
-            阈值：默认内存扩大一倍，启动gc
-            定期：默认2min触发一次gc，src/runtime/proc.go:forcegcperiod
-            手动：runtime.gc()
-        `,
-        difficulty: "easy",
       },
       {
         question: "什么是 goroutine 泄漏 ?",

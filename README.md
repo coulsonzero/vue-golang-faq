@@ -31,3 +31,8 @@ $ npm run dev
 ```sh
 $ docker-compose up --build -d nginx-app
 ```
+
+### scss
+```sh
+$ npm install sass-loader node-sass vue-style-loader --D
+```
