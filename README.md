@@ -36,3 +36,8 @@ $ docker-compose up --build -d nginx-app
 ```sh
 $ npm install sass-loader node-sass vue-style-loader --D
 ```
+```vue
+<style lang="scss" scoped>
+
+</style>
+```

@@ -5,7 +5,8 @@
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
-		"deploy": "bash deploy.sh"
+		"deploy": "bash deploy.sh",
+		"docker": "docker-compose up --build -d nginx-app"
 	},
 	"dependencies": {
 		"vue": "^3.2.41",
