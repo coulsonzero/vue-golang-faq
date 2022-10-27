@@ -15,9 +15,9 @@ import { RouterLink, RouterView } from "vue-router";
   <RouterLink to="/faq">FAQ</RouterLink>
   </nav>
   </div>
-  </header>
--->
-  <RouterView />
+  </header> -->
+
+  <router-view />
 </template>
 
 <style scoped>
