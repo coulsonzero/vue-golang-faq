@@ -17,9 +17,14 @@ export default {
       },
       {
         question: "defer 的执行顺序 ? (基本必问)",
-        answer: `defer执行顺序和调用顺序相反，类似于栈后进先出;\n
-            多个defer语句最先被定义的defer语句最后执行;\n
-            defer在return之后执行，但在函数退出之前，defer可以修改返回值`,
+        answer: `
+            1) 多个defer的执行顺序: 栈"后进先出";\n
+            2) defer与return的执行时机: defer在return之后执行，但在函数退出之前，defer可以修改返回值
+              a) 在return赋值返回值之后
+              b) 调用defer执行收尾工作
+              c) RET指令执行前 (最后RET指令携带返回值退出函数)
+            3) os.Exit(1)退出进程时，已声明的defer将不再被执行。
+        `,
         difficulty: "medium",
       },
       {
@@ -307,6 +312,30 @@ export default {
         </div>
       </div>
     </div>
+    <div class="btn-add">
+      <svg
+        class="btn-svg"
+        t="1667228264998"
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        p-id="2524"
+        width="200"
+        height="200"
+      >
+        <path
+          d="M504.595826 16.451146c-278.332887 0-503.967312 225.633418-503.967312 503.967312s225.633418 503.967312 503.967312 503.967312 503.967312-225.633418 503.967312-503.967312S782.928713 16.451146 504.595826 16.451146zM827.449445 537.444735 523.428072 537.444735l0 305.826335c0 10.872079-8.768976 19.686381-19.641055 19.686381-10.873087 0-19.641055-8.814301-19.641055-19.686381l0-305.826335L181.742207 537.444735c-10.873087 0-19.686381-8.768976-19.686381-19.641055 0-10.872079 8.813294-19.641055 19.686381-19.641055l302.403755 0 0-300.598793c0-10.873087 8.767968-19.686381 19.641055-19.686381 10.872079 0 19.641055 8.813294 19.641055 19.686381l0 300.598793 304.021372 0c10.872079 0 19.686381 8.768976 19.686381 19.641055C847.135825 528.675759 838.321524 537.444735 827.449445 537.444735z"
+          p-id="2525"
+        ></path>
+      </svg>
+      <div class="btn-dialog">
+        <div class="dialog-title">Add a new Question</div>
+        <div class="dialog-container">
+          <input type="text" value="" class="q-title" />
+          <textarea value="" class="q-answer">asas</textarea>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="copyright">
@@ -534,4 +563,70 @@ body {
   }
 }
 /*# sourceMappingURL=FAQ.css.map */
+
+/* btn-add */
+.btn-add {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  cursor: pointer;
+}
+.btn-add .btn-svg {
+  width: 50px;
+  height: 50px;
+  fill: #323232ce;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.btn-add .btn-svg:hover {
+  fill: #212121e3;
+}
+
+.btn-dialog {
+  background: rgb(255, 246, 246);
+  width: 600px;
+  height: 400px;
+  border-radius: 12px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background: rgba(234, 234, 234, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 2px 2px 6px #7a7979a8;
+  border-top: 1px solid #d4d4d4;
+  border-left: 1px solid #d4d4d4;
+
+  z-index: 100;
+  cursor: default;
+}
+
+
+.dialog-title {
+  text-align: center;
+  margin: 20px 0 40px;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 40px;
+}
+
+.dialog-container input[type=text] {
+  width: 100%;
+  height: 40px;
+
+}
+
+.dialog-container .q-answer {
+  width: 100%;
+  height: 200px;
+  border: none;
+
+}
 </style>
