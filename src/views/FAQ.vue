@@ -787,4 +787,11 @@ body {
 .dialog-container .dialog-cancle:hover path {
   fill: rgba(54, 54, 54, 1);
 }
+
+@media screen and(max-width: 1000px) {
+  .btn-dialog {
+    width: 360px;
+    height: 360px;
+  }
+}
 </style>
