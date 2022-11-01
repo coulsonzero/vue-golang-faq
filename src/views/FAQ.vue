@@ -5,25 +5,25 @@ export default {
     faq: [
       {
         question: "slice 和数组的区别 ? (基本必问)",
-        answer: `array 是固定长度的数组，并且是值类型的，也就是说是拷贝复制的;\n
-          slice 是一个引用类型，指向了一个动态数组的指针，会进行动态扩容.`,
+        answer: `
+        array 是固定长度的数组，并且是值类型的，也就是说是拷贝复制的;\n
+        slice 是一个引用类型，指向了一个动态数组的指针，会进行动态扩容.`,
         difficulty: "easy",
       },
       {
         question: "make 和 new 的区别 ? (基本必问)",
-        answer: `new: 用于分配内存，返回一个指向一个新的内存地址且初始值为0的指针第一个参数为类型;\n
-            make: 仅用于分配内存和初始化一个对象类型(slice, map, chan), 返回类型和它的第一个参数类型相同而不是一个指针，返回引用`,
+        answer: `
+        new: 用于分配内存，返回一个指向一个新的内存地址且初始值为0的指针第一个参数为类型;\n
+        make: 仅用于分配内存和初始化一个对象类型(slice, map, chan), 返回类型和它的第一个参数类型相同而不是一个指针，返回引用`,
         difficulty: "medium",
       },
       {
         question: "defer 的执行顺序 ? (基本必问)",
-        answer: `
-            1) 多个defer的执行顺序: 栈"后进先出";\n
-            2) defer与return的执行时机: defer在return之后执行，但在函数退出之前，defer可以修改返回值
-              a) 在return赋值返回值之后
-              b) 调用defer执行收尾工作
-              c) RET指令执行前 (最后RET指令携带返回值退出函数)
-            3) os.Exit(1)退出进程时，已声明的defer将不再被执行。
+        answer: `1) 多个defer的执行顺序: 栈"后进先出";\n
+        2) defer与return的执行时机: defer在return之后执行，但在函数退出之前，defer可以修改返回值\n
+          a) 在return赋值返回值之后\n
+          b) 调用defer执行收尾工作\n
+          c) RET指令执行前 (最后RET指令携带返回值退出函数)\n3) os.Exit(1)退出进程时，已声明的defer将不再被执行\n
         `,
         difficulty: "medium",
       },
@@ -276,10 +276,36 @@ export default {
       ["medium", "中等"],
       ["hard", "困难"],
     ]),
+    // button
+    dialog_open: false,
+    question_title: "",
+    question_answer: "",
   }),
   methods: {
     toggleAccordion(id) {
       this.flag == id ? (this.flag = -1) : (this.flag = id);
+    },
+    confirm_dialog() {
+      this.dialog_open = false;
+      console.log(this.question_title);
+      console.log(this.question_answer);
+
+      const row = {
+        question: this.question_title,
+        answer: this.question_answer,
+        difficulty: "easy",
+      };
+      this.faq.push(row);
+
+      localStorage.setItem("faq", JSON.stringify(row));
+    },
+    indent(s) {
+      // let sum = 0;
+      let arr = s.split("");
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] != " ") return i * 3 + "px";
+      }
+      // return sum  + "px";
     },
   },
 };
@@ -297,7 +323,7 @@ export default {
         >
           <div class="title-wrapper">
             <span class="accordion-title">{{
-              index + 1 + ".  " + item.question
+              String(index + 1).padStart(2, 0) + ".   " + item.question
             }}</span>
             <span
               class="accordion-difficulty"
@@ -308,11 +334,20 @@ export default {
           <span class="icon" aria-hidden="true"></span>
         </button>
         <div class="accordion-content">
-          <p>{{ item.answer }}</p>
+          <!-- <code> -->
+          <!-- <p :style="{textIndent: '30px'}">{{ item.answer }}</p> -->
+          <!-- </code> -->
+          <p
+            v-for="(it, idx) in item.answer.split('\n')"
+            :key="idx"
+            :style="{ textIndent: indent(it) }"
+          >
+            {{ it }}
+          </p>
         </div>
       </div>
     </div>
-    <div class="btn-add">
+    <div class="btn-add" @click="dialog_open = true">
       <svg
         class="btn-svg"
         t="1667228264998"
@@ -328,12 +363,46 @@ export default {
           p-id="2525"
         ></path>
       </svg>
-      <div class="btn-dialog">
-        <div class="dialog-title">Add a new Question</div>
-        <div class="dialog-container">
-          <input type="text" value="" class="q-title" />
-          <textarea value="" class="q-answer">asas</textarea>
-        </div>
+    </div>
+    <div
+      class="dialog-wrapper"
+      v-show="dialog_open"
+      @click="dialog_open = false"
+    ></div>
+    <div class="btn-dialog" v-show="dialog_open">
+      <div class="dialog-title">Add a new Question</div>
+      <div class="dialog-container">
+        <input
+          type="text"
+          name="question-title"
+          v-model="question_title"
+          class="q-title"
+          placeholder="Enter a question title "
+        />
+        <textarea
+          v-model="question_answer"
+          class="q-answer"
+          placeholder="Here is answer..."
+        ></textarea>
+        <button class="dialog-confirm" @click="confirm_dialog">Confirm</button>
+        <button class="dialog-cancle" @click="dialog_open = false">
+          <svg
+            t="1667231486592"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="3443"
+            width="200"
+            height="200"
+          >
+            <path
+              d="M512.268258 130.418417c-210.405363 0-381.581583 171.175196-381.581583 381.581583 0 210.405363 171.17622 381.580559 381.581583 381.580559s381.581583-171.17622 381.581583-381.580559c-0.001024-210.405363-171.17622-381.581583-381.581583-381.581583z m0 727.389636c-190.678164 0-345.808053-155.128866-345.808054-345.808053s155.128866-345.808053 345.808054-345.808053 345.808053 155.128866 345.808053 345.808053c0 190.678164-155.129889 345.808053-345.808053 345.808053zM652.381845 630.389812c6.984946 6.986993 6.984946 18.310141 0 25.297135a17.840178 17.840178 0 0 1-12.649079 5.238197c-4.576767 0-9.155583-1.746748-12.649079-5.238197L507.353608 535.955845 384.126962 659.182492a17.840178 17.840178 0 0 1-12.64908 5.238197c-4.576767 0-9.155583-1.746748-12.649079-5.238197-6.984946-6.986993-6.984946-18.310141 0-25.297135l123.226647-123.226647-114.671061-114.673108c-6.984946-6.986993-6.984946-18.310141 0-25.297135 6.986993-6.981874 18.310141-6.981874 25.297135 0l114.672084 114.672085 116.358424-116.358424c6.986993-6.981874 18.310141-6.981874 25.297135 0 6.984946 6.986993 6.984946 18.310141 0 25.297134L532.651767 510.65871 652.381845 630.389812z"
+              fill="#272636"
+              p-id="3444"
+            ></path>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
@@ -344,15 +413,15 @@ export default {
 </template>
 
 
-<style>
+<style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css?family=Hind:300,400&display=swap");
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  user-select: none;
-  -webkit-user-select: none;
+  /* user-select: none; */
+  /* -webkit-user-select: none; */
 }
 
 *::before,
@@ -390,6 +459,7 @@ body {
   text-align: center;
   font-size: 3rem;
   margin-bottom: 5rem;
+  color: #444444;
 }
 
 .accordion .accordion-item button[aria-expanded="false"] {
@@ -412,7 +482,7 @@ body {
   padding: 1em 0;
   /* color: #7288a2; */
   /* color: #8e8989; */
-  color: #7b7a7a;
+  color: #585858;
   font-size: 1.15rem;
   font-weight: 300;
   border: none;
@@ -503,7 +573,8 @@ body {
 .accordion button[aria-expanded="true"] + .accordion-content {
   opacity: 1;
   /* max-height: 9em; */
-  max-height: 100em;
+  max-height: 20em;
+  overflow-y: scroll;
   /* transition: all 0.7s ease-in-out; */
   -webkit-transition: opacity 500ms ease-in-out, max-height 500ms ease-in-out;
   transition: opacity 500ms ease-in-out, max-height 500ms ease-in-out;
@@ -523,10 +594,19 @@ body {
 .accordion .accordion-content p {
   font-size: 1rem;
   font-weight: 300;
-  margin: 2em 0;
+  /* margin: 2em 0; */
   white-space: pre-line;
   letter-spacing: 1px;
   color: #303030;
+  padding-left: 5px;
+  line-height: 2;
+}
+
+.accordion .accordion-content p:first-child {
+  margin-top: 30px;
+}
+.accordion .accordion-content p:last-child {
+  margin-bottom: 30px;
 }
 
 .copyright {
@@ -572,9 +652,9 @@ body {
   cursor: pointer;
 }
 .btn-add .btn-svg {
-  width: 50px;
-  height: 50px;
-  fill: #323232ce;
+  width: 2.6rem;
+  height: 2.6rem;
+  fill: #545454ba;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
@@ -582,51 +662,129 @@ body {
   fill: #212121e3;
 }
 
-.btn-dialog {
-  background: rgb(255, 246, 246);
-  width: 600px;
-  height: 400px;
-  border-radius: 12px;
+/* dialog */
+.dialog-wrapper {
   position: fixed;
-  top: 50%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  /* backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px); */
+}
+.btn-dialog {
+  position: relative;
+  width: 700px;
+  height: 400px;
+  border-radius: 20px;
+  position: fixed;
+  top: 46%;
   left: 50%;
   transform: translate(-50%, -50%);
 
-  background: rgba(234, 234, 234, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 2px 2px 6px #7a7979a8;
-  border-top: 1px solid #d4d4d4;
-  border-left: 1px solid #d4d4d4;
-
-  z-index: 100;
+  /* background: rgba(234, 234, 234, 0.4); */
+  background: rgba(255, 255, 255, 0.89);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  /* box-shadow: 2px 2px 6px #7a7979a8; */
+  border-top: 1px solid #3a3838;
+  border-left: 1px solid #3a3838;
+  box-shadow: 3px 3px 12px #4b4b4b;
   cursor: default;
 }
 
-
 .dialog-title {
   text-align: center;
-  margin: 20px 0 40px;
+  margin: 26px 0 10px;
   font-size: 1.6rem;
   font-weight: 700;
+  color: #4b4b4b;
 }
 
 .dialog-container {
   display: flex;
   flex-direction: column;
   padding: 20px 40px;
+  z-index: 30;
+  justify-content: center;
+  align-items: center;
 }
 
-.dialog-container input[type=text] {
-  width: 100%;
+.dialog-container .q-title {
+  position: relative;
+  width: calc(100% - 20px);
   height: 40px;
-
+  font-size: 1rem;
+  padding: 10px 30px;
+  margin: 0px 0 30px;
+  /* border-radius: 20px; */
+  /* border: 1px solid #4b4b4b; */
+  letter-spacing: 1px;
+  outline: none;
+  border: none;
+  background: none;
+  border-bottom: 1px solid #323232;
 }
 
 .dialog-container .q-answer {
   width: 100%;
-  height: 200px;
-  border: none;
+  height: 120px;
+  border: 1px solid #4b4b4b;
+  border-radius: 12px;
+  font-size: 1rem;
+  padding: 10px 30px;
+  letter-spacing: 1px;
+  border: 1px solid #868686;
+  background: transparent;
+  outline: none;
+}
+.dialog-container .q-answer:hover {
+  border-color: #323232;
+}
 
+/* confirm button */
+.dialog-container .dialog-confirm {
+  border: 1px solid #323232;
+  outline: none;
+  position: absolute;
+  right: 50px;
+  bottom: 20px;
+  width: 150px;
+  height: 40px;
+  background: transparent;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.dialog-container .dialog-confirm:hover {
+  background: #303030;
+  color: #f8f8f8;
+}
+
+/* cancle button */
+.dialog-container .dialog-cancle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  border: none;
+  outline: none;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border-radius: 50%;
+}
+.dialog-container .dialog-cancle svg {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+.dialog-container .dialog-cancle svg path {
+  fill: rgba(54, 54, 54, 0.4);
+  transition: all 0.15 ease-in-out;
+}
+.dialog-container .dialog-cancle:hover path {
+  fill: rgba(54, 54, 54, 1);
 }
 </style>
