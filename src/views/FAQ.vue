@@ -123,6 +123,19 @@ export default {
         difficulty: "easy",
       },
       {
+        question: "channel close之后读写的问题 ？",
+        answer: `
+        close的channel来说，可读不可写，一写就panic。
+        而读呢，如果channel还有数据，那么先读数据，如果channel里面已经没有数据了，还去读channel，那么此时读出来的是类型零值
+        --------------------------
+        读已经关闭的chan能一直读到东西，但是读到的内容根据通道内关闭前是否有元素而不同。
+        如果chan关闭前，buffer内有元素还未读,会正确读到chan内的值，且返回的第二个bool值（是否读成功）为true。
+        如果chan关闭前，buffer内有元素已经被读完，chan内无值，接下来所有接收的值都会非阻塞直接成功，返回 channel 元素的零值，但是第二个bool值一直为false。
+        写已经关闭的chan会panic
+        `,
+        difficulty: "easy",
+      },
+      {
         question: "channels 怎么保证线程安全？",
         answer: `
         并发安全的产生：
@@ -788,7 +801,7 @@ body {
   fill: rgba(54, 54, 54, 1);
 }
 
-@media screen and(max-width: 1000px) {
+@media screen and (max-width: 1000px) {
   .btn-dialog {
     width: 360px;
     height: 360px;
