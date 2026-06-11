@@ -20,7 +20,7 @@ export default {
       {
         question: "defer 的执行顺序 ? (基本必问)",
         answer: `1) 多个defer的执行顺序: 栈"后进先出";\n
-        2) defer与return的执行时机: defer在return之后执行，但在函数退出之前，defer可以修改返回值\n
+        2) defer与return的执行时机: defer在return之后执行，但在函数退出之前，defer可以通过指针修改返回值\n
           a) 在return赋值返回值之后\n
           b) 调用defer执行收尾工作\n
           c) RET指令执行前 (最后RET指令携带返回值退出函数)\n3) os.Exit(1)退出进程时，已声明的defer将不再被执行\n
@@ -35,31 +35,30 @@ export default {
 
         // Map contains Type fields specific to maps.
         type Map struct {
-            Key  *Type // Key type
-            Elem *Type // Val (elem) type
-
-            Bucket *Type // internal struct type representing a hash bucket
-            Hmap   *Type // internal struct type representing the Hmap (map header object)
-            Hiter  *Type // internal struct type representing hash iterator state
+            Key  *Type // Key
+            Elem *Type // Val (elem)
+            Bucket *Type // hash bucket
+            Hmap   *Type // Hmap (map header object)
+            Hiter  *Type // hash iterator state
         }
-
-        前两个字段分别为 key value, 由于 go map 支持多种数据类型,
         go 会在编译期推断其具体的数据类型,
-        Bucket 是哈希桶, Hmap 表征了 map 底层使用的 HashTable 的元信息, 如当前 HashTable 中含有的元素数据、桶指针等,
+        Bucket 是哈希桶,
+        Hmap 表征了 map 底层使用的 HashTable 的元信息, 如当前 HashTable 中含有的元素数据、桶指针等,
         Hiter 是用于遍历 go map 的数据结构
         map同样也是数组存储的的，每个数组下标处存储的是一个bucket,这个bucket的类型见下面代码，每个bucket中可以存储8个kv键值对，
         当每个bucket存储的kv对到达8个之后，会通过overflow指针指向一个新的bucket，从而形成一个链表
 
         map如何扩容:
-            go map 的扩容类似于 redis, 都是采用渐进式扩容,
-            避免一次性对大 map 扩容造成的区间性能抖动, go 扩容的基本步骤是首先根据扩容条件(装载因子 >= 6.5 或 溢出桶数目太多),
-            而确定扩容后的大小, 然后创建该大小的新哈希桶, 这时会将 hmap 中的 buckets 指针指向新创建的哈希桶,
-            而原先的哈希桶地址则保存在 oldbuckets 指针中
+            go map 的扩容类似于 redis, 都是采用渐进式扩容, 避免一次性对大 map 扩容造成的区间性能抖动
+            扩容的基本步骤：
+            1.首先根据扩容条件(装载因子 >= 6.5 或 溢出桶数目太多)而确定扩容后的大小,
+            2.然后创建该大小的新哈希桶, 这时会将 hmap 中的 buckets 指针指向新创建的哈希桶, 而原先的哈希桶地址则保存在 oldbuckets 指针中
 
         map 的遍历：
+            map 的遍历是无序的，自动扩容导致
             外层循环遍历所有 Bucket, 中层循环横向遍历所有溢出桶, 内层循环遍历 Bucket 的所有 k/v ,
             若没有扩容逻辑的话, 以上所述的 3 层循环即可完成 map 的遍历
-            map 的遍历是无序的
+
         `,
         difficulty: "hard",
       },
@@ -68,8 +67,8 @@ export default {
         answer: `
         map不是线程安全的
         如何解决map并发安全问题：
-            1. 加读写锁：读取的时候加读锁，写的时候加写锁。
-            2. 使用线程安全的 sync.Map： 写值的时候得通过 Store 方法，读的时候使用方法 Load 来读取
+            1. 加读写锁sync.RWMtutex：读取的时候加读锁，写的时候加写锁。
+            2. 使用线程安全的 sync.Map： 写值的时候得通过 Store() 方法，读的时候使用方法 Load() 来读取
                 sync.Map 支持并发读写，采取了 “空间换时间” 的机制，冗余了两个数据结构，分别是：read 和 dirty。
                 和我们的第一种方案 map+RWMutex 的实现并发的方式相比，减少了加锁对性能的影响。
                 它做了一些优化：可以无锁访问read map，而且会优先操作read map，倘若只操作read map就可以满足要求，那就不用去操作write map(dirty)。
