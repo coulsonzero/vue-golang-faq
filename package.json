@@ -1,5 +1,5 @@
 {
-	"name": "vue-golang-faq",
+	"name": "vue-faq",
 	"version": "0.0.0",
 	"scripts": {
 		"dev": "vite",

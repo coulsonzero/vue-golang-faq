@@ -11,9 +11,9 @@ echo 'faq.coulsonzero.shop' > CNAME
 
 git init
 git add -A
-git commit -m 'deploy vue-golang-faq'
+git commit -m 'deploy vue-faq'
 
-git push -f git@github.com:coulsonzero/vue-golang-faq.git master:gh-pages
+git push -f git@github.com:coulsonzero/vue-faq.git master:gh-pages
 
 cd -
 
